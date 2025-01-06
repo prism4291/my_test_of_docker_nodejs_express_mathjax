@@ -44,7 +44,7 @@ const convertSVGToPNG = async (svgString) => {
             throw new Error('SVGのサイズ情報が見つかりませんでした。');
         }
 
-        const scaleFactor = 8;
+        const scaleFactor = 6;
         const padding = 5;
         const scaledWidth = width * scaleFactor;
         const scaledHeight = height * scaleFactor;
@@ -60,7 +60,14 @@ const convertSVGToPNG = async (svgString) => {
                 bottom: Math.round(padding),
                 left: Math.round(padding),
                 right: Math.round(padding),
-                background: { r: 32, g: 32, b: 32}
+                background: { r: 255, g: 255, b: 255}
+            })
+            .extend({
+                top: Math.round(padding),
+                bottom: Math.round(padding),
+                left: Math.round(padding),
+                right: Math.round(padding),
+                background: { r: 64, g: 64, b: 64}
             })
             .flatten({ background: { r: 255, g: 255, b: 255 } })
             .extend({
@@ -68,7 +75,7 @@ const convertSVGToPNG = async (svgString) => {
                 bottom: Math.round(padding),
                 left: Math.round(padding),
                 right: Math.round(padding),
-                background: { r: 32, g: 32, b: 32, alpha: 0.5 }
+                background: { r: 32, g: 32, b: 32, alpha: 0.1 }
             })
             .png()
             .toBuffer();
