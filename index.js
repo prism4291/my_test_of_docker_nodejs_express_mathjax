@@ -20,20 +20,42 @@ const renderMathToSVG = async (mathInput) => {
 
 const convertSVGToPNG = async (svgString) => {
     try {
-        const svgBuffer = Buffer.from(svgString);
-        const metadata = await sharp(svgBuffer).metadata();
-        const pngBuffer = await sharp(svgBuffer)
-            .flatten({ background: { r: 255, g: 255, b: 255 } })
-            .resize({ width: metadata.width * 10, height: metadata.height * 10 })
+        // SVGのビュー情報を取得
+        const matchViewBox = svgString.match(/viewBox="([\d.]+\s[\d.]+\s[\d.]+\s[\d.]+)"/);
+        let width, height;
+        
+        if (matchViewBox) {
+            const [x, y, w, h] = matchViewBox[1].split(' ').map(Number);
+            width = w;
+            height = h;
+        } else {
+            // デフォルトのメタデータ取得
+            const metadata = await sharp(Buffer.from(svgString)).metadata();
+            width = metadata.width;
+            height = metadata.height;
+        }
+
+        if (!width || !height) {
+            throw new Error('SVGのサイズ情報が見つかりませんでした。');
+        }
+
+        const scaleFactor = 10;
+        const padding = 20;//0.1 * Math.max(width, height); // 画像サイズの10%をパディングとして追加
+        const scaledWidth = width * scaleFactor;
+        const scaledHeight = height * scaleFactor;
+
+        const pngBuffer = await sharp(Buffer.from(svgString))
+            .resize({ width: scaledWidth, height: scaledHeight })
             .extend({
-                top: 20,
-                bottom: 20,
-                left: 20,
-                right: 20,
-                background: { r: 255, g: 255, b: 255 },
+                top: Math.round(padding),
+                bottom: Math.round(padding),
+                left: Math.round(padding),
+                right: Math.round(padding),
+                background: { r: 255, g: 255, b: 255 }
             })
             .png()
             .toBuffer();
+
         return pngBuffer;
     } catch (error) {
         console.error("Sharp error:", error);
