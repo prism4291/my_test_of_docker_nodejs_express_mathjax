@@ -8,6 +8,11 @@ const renderMathToSVG = async (mathInput) => {
   try {
     const mjInstance = await mathjax.init({
       loader: { load: ['input/tex', 'output/svg'] },
+      svg: {
+        scale: 1,                  // サイズ倍率
+        displayAlign: 'center',    // 中央揃え
+        displayIndent: '2em',      // インデントの指定 (余白)
+      }
     });
     const svg = mjInstance.tex2svg(mathInput, { display: true });
     const svgString = mjInstance.startup.adaptor.innerHTML(svg);
@@ -39,19 +44,24 @@ const convertSVGToPNG = async (svgString) => {
             throw new Error('SVGのサイズ情報が見つかりませんでした。');
         }
 
-        const scaleFactor = 10;
-        const padding = 20;//0.1 * Math.max(width, height); // 画像サイズの10%をパディングとして追加
+        const scaleFactor = 8;
+        const padding = 10;
         const scaledWidth = width * scaleFactor;
         const scaledHeight = height * scaleFactor;
 
         const pngBuffer = await sharp(Buffer.from(svgString))
-            .resize({ width: scaledWidth, height: scaledHeight })
+            .resize({
+                width: scaledWidth,
+                height: scaledHeight,
+                fit: 'contain',
+                background: { r: 255, g: 255, b: 255, alpha: 1 }
+            })
             .extend({
                 top: Math.round(padding),
                 bottom: Math.round(padding),
                 left: Math.round(padding),
                 right: Math.round(padding),
-                background: { r: 255, g: 255, b: 255 }
+                background: { r: 32, g: 32, b: 32, alpha: 0.5 }
             })
             .png()
             .toBuffer();
