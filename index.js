@@ -22,18 +22,14 @@ const convertSVGToPNG = async (svgString) => {
     try {
         const svgBuffer = Buffer.from(svgString);
         const metadata = await sharp(svgBuffer).metadata();
-
-        // アスペクト比を維持したままリサイズ
-        //const width = 1600;
-        //const height = Math.round(width * metadata.height / metadata.width);
-        const padding = 20;
         const pngBuffer = await sharp(svgBuffer)
             .flatten({ background: { r: 255, g: 255, b: 255 } })
+            .resize({ width: metadata.width * 10, height: metadata.height * 10 })
             .extend({
-                top: padding,
-                bottom: padding,
-                left: padding,
-                right: padding,
+                top: 20,
+                bottom: 20,
+                left: 20,
+                right: 20,
                 background: { r: 255, g: 255, b: 255 },
             })
             .png()
@@ -51,6 +47,7 @@ app.get('/', (req, res) => {
 
 app.get('/mathjax', async (req, res) => {
     const mathInput = req.query.math;
+    const mathWidth = req.query.w || 640;
 
     if (!mathInput || mathInput.trim() === "") {
         return res.status(400).send("Missing or empty 'math' parameter.");
