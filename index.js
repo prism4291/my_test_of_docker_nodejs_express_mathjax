@@ -54,7 +54,7 @@ const convertSVGToPNG = async (svgString) => {
                 width: scaledWidth,
                 height: scaledHeight,
                 fit: 'contain',
-                background: { r: 255, g: 255, b: 255, alpha: 1 }
+                background: { r: 255, g: 255, b: 255, alpha: 0.92 }
             })
             .extend({
                 top: Math.round(padding),
