@@ -24,13 +24,16 @@ const convertSVGToPNG = async (svgString) => {
         const metadata = await sharp(svgBuffer).metadata();
 
         // アスペクト比を維持したままリサイズ
-        const width = 1600;
-        const height = Math.round(width * metadata.height / metadata.width);
-        
+        //const width = 1600;
+        //const height = Math.round(width * metadata.height / metadata.width);
+        const padding = 20;
         const pngBuffer = await sharp(svgBuffer)
             .flatten({ background: { r: 255, g: 255, b: 255 } })
-            .resize(width, height, {
-                fit: 'contain',
+            .extend({
+                top: padding,
+                bottom: padding,
+                left: padding,
+                right: padding,
                 background: { r: 255, g: 255, b: 255 },
             })
             .png()
