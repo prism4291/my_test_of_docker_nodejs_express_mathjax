@@ -53,21 +53,29 @@ const convertSVGToPNG = async (svgString) => {
             .resize({
                 width: scaledWidth,
                 height: scaledHeight,
-                background: { r: 255, g: 255, b: 255, alpha: 0.5 }
+                fit: 'contain',
+                background: { r: 255, g: 255, b: 255}
             })
             .extend({
                 top: Math.round(padding),
                 bottom: Math.round(padding),
                 left: Math.round(padding),
                 right: Math.round(padding),
-                background: { r: 32, g: 32, b: 32, alpha: 0.5 }
+                background: { r: 255, g: 32, b: 32, alpha: 0.5 }
             })
             .extend({
                 top: Math.round(padding),
                 bottom: Math.round(padding),
                 left: Math.round(padding),
                 right: Math.round(padding),
-                background: { r: 0, g: 0, b: 0, alpha: 0 }
+                background: { r: 0, g: 255, b: 0, alpha: 0.0 }
+            })
+            .extend({
+                top: Math.round(padding),
+                bottom: Math.round(padding),
+                left: Math.round(padding),
+                right: Math.round(padding),
+                background: { r: 0, g: 0, b: 255, alpha: 1.0 }
             })
             .png()
             .toBuffer();
