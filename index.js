@@ -44,7 +44,7 @@ const convertSVGToPNG = async (svgString) => {
             throw new Error('SVGのサイズ情報が見つかりませんでした。');
         }
 
-        const scaleFactor = 6;
+        const scaleFactor = 4;
         const padding = 5;
         const scaledWidth = width * scaleFactor;
         const scaledHeight = height * scaleFactor;
